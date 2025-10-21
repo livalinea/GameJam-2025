@@ -9,38 +9,41 @@ namespace GameJam
 {
     public class Enemies
     {
-        public string Cat { get; } = "EvilCat";
-        public int Catlives { get; private set; }
+        private const int DefaultLives = 4;  // Alle katte starter med 4 liv
+        public string Name { get; } = "Evil Cat";
+        public int Lives { get; private set; }
 
-        public Enemies( int catlives) 
+        public Enemies()
         {
-            Catlives = 4;
+            Lives = DefaultLives;
         }
         public Enemies Clone()
         {
-            return new Enemies(this.Catlives);
+            return new Enemies();
         }
 
-        public void CatAttack()
+        public void TakeDamage(int amount)
         {
-            Random rand = new Random();
-            int catAttack = rand.Next(1, 4);
-            if (catAttack == 1)
+            if (!IsAlive())
             {
-                Console.WriteLine("The cat scratches you! You lose 1 life.");
-                Catlives -= 1;
+                Console.WriteLine($"{Name} er allerede besejret!");
+                return;
             }
-            else if (catAttack == 2)
+
+            Lives = Lives - amount;
+
+            if (Lives < 0) Lives = 0;
+            Console.WriteLine($"{Name} mister {amount} liv! ({Lives} HP tilbage)");
+
+            if (!IsAlive())
             {
-                Console.WriteLine("The cat bites you! You lose 2 lives.");
-                Catlives -= 2;
-            }
-            else
-            {
-                Console.WriteLine("The cat pounces on you! You lose 3 lives.");
-                Catlives -= 3;
+                Console.WriteLine($"{Name} er besejret!");
             }
         }
+            
+       // Tjek om katten stadig lever
+       public bool IsAlive() => Lives > 0;
     }
-  
 }
+    
+
